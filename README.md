@@ -115,6 +115,9 @@ npm run dev
 2. Si estás logueado como administrador (credenciales del archivo `.env`), podrás agregar, editar o eliminar productos.
 3. Los usuarios pueden buscar productos, agregarlos a favoritos, y ver su perfil.
 
+##Link al Video Explicativo
+https://youtu.be/Ukp6C-0Ng8o
+
 ## Otros Detalles
 
 - **Diseño Responsivo**: El frontend utiliza `react-bootstrap` para un diseño responsivo y agradable en dispositivos móviles y de escritorio.
