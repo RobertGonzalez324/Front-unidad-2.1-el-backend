@@ -8,6 +8,11 @@ const productoEsquema = new mongoose.Schema({
   precio: { type: Number, required: true },
   cantidad: { type: Number, required: true },
   imagen: String,
+  vendedor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Usuario",
+    required: true,
+  },
 });
 
 const Producto = mongoose.model("Producto", productoEsquema);

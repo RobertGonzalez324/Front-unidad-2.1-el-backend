@@ -4,7 +4,12 @@ const Producto = require("../modelos/productoModelo");
 // Crear un producto
 exports.crearProducto = async (req, res) => {
   try {
-    const nuevoProducto = new Producto(req.body);
+    const datosProducto = {
+      ...req.body,
+      vendedor: req.usuario?._id || req.body.vendedor,
+    };
+
+    const nuevoProducto = new Producto(datosProducto);
     const productoGuardado = await nuevoProducto.save();
     res.status(201).json(productoGuardado);
   } catch (error) {
@@ -25,11 +30,28 @@ exports.obtenerProductos = async (req, res) => {
 // Actualizar un producto
 exports.actualizarProducto = async (req, res) => {
   try {
+    const producto = await Producto.findById(req.params.id);
+
+    if (!producto) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+
+    const esAdmin = req.usuario && req.usuario.rol === "admin";
+    const esPropietario =
+      req.usuario && String(producto.vendedor) === String(req.usuario._id);
+
+    if (!esAdmin && !esPropietario) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para editar este producto" });
+    }
+
     const productoActualizado = await Producto.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
+
     res.status(200).json(productoActualizado);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -39,6 +61,22 @@ exports.actualizarProducto = async (req, res) => {
 // Eliminar un producto
 exports.eliminarProducto = async (req, res) => {
   try {
+    const producto = await Producto.findById(req.params.id);
+
+    if (!producto) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+
+    const esAdmin = req.usuario && req.usuario.rol === "admin";
+    const esPropietario =
+      req.usuario && String(producto.vendedor) === String(req.usuario._id);
+
+    if (!esAdmin && !esPropietario) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para eliminar este producto" });
+    }
+
     await Producto.findByIdAndDelete(req.params.id);
     res.status(204).json({ message: "Producto eliminado" });
   } catch (error) {

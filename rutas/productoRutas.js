@@ -9,16 +9,16 @@ const {
 const { proteger, soloAdmin } = require("../middlewares/authMiddleware"); // Importar middleware de autenticación
 const router = express.Router();
 
-// Ruta protegida para crear productos (solo admin)
-router.post("/productos", proteger, soloAdmin, crearProducto);
+// Ruta protegida para crear productos (cualquier usuario autenticado puede vender)
+router.post("/productos", proteger, crearProducto);
 
 // Ruta pública para obtener productos
 router.get("/productos", obtenerProductos);
 
-// Ruta protegida para actualizar productos (solo admin)
-router.put("/productos/:id", proteger, soloAdmin, actualizarProducto);
+// Ruta protegida para actualizar productos (admin o propietario)
+router.put("/productos/:id", proteger, actualizarProducto);
 
-// Ruta protegida para eliminar productos (solo admin)
-router.delete("/productos/:id", proteger, soloAdmin, eliminarProducto);
+// Ruta protegida para eliminar productos (admin o propietario)
+router.delete("/productos/:id", proteger, eliminarProducto);
 
 module.exports = router;
